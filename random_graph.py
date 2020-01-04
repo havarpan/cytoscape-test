@@ -1,11 +1,9 @@
-# console: python ./random_graph.py > ./public/graph.json
-
 import networkx as nx
 import random
 import json
 
-
 # cytoscape-compatible json from G
+# networkx's json_graph.cytoscape_data seems to be broken
 def cyto_json(G):
 
     final = {}
@@ -31,7 +29,7 @@ def cyto_json(G):
     return json.dumps(final, indent=4)
 
 
-# create a connected graph with some randomness
+# connected graph with some randomness
 def create_graph():
     G = nx.erdos_renyi_graph(random.randint(5,12), 0.4, directed=False)
     while not nx.is_connected(G):
@@ -44,6 +42,7 @@ def create_graph():
 
 def get_json():
     return cyto_json(create_graph())
-    
+  
+# if called from console  
 if __name__ == "__main__":
     print(get_json())

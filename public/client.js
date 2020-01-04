@@ -1,33 +1,25 @@
 /* global cytoscape */
 
-/* jquery:
+const getGraph = async function() {
+  const data = await fetch("/", {
+    method: "POST"
+  });
+  const posted_json = JSON.parse(await data.json());
+  renderGraph(posted_json);
+};
+getGraph();
 
+/* the above with jquery:
 fetch("/", {
     method: "POST"
   })
     .then(res => res.json())
     .then(response => {
-      console.log(JSON.parse(response))
       renderGraph(JSON.parse(response))
     });
-
 */
 
-// the above without jquery
-const getGraph = async function() {
-  const data = await fetch("/", {
-    method: "POST"
-  })
-  
-  const jsoni = JSON.parse(await data.json())
-  console.log(jsoni)
-  renderGraph(jsoni)
-}
-getGraph()
-
-
 const renderGraph = function(data) {
-  
   const cy = cytoscape({
     container: document.getElementById("cy"),
     elements: data,
@@ -36,28 +28,25 @@ const renderGraph = function(data) {
         selector: "node",
         style: {
           label: "data(label)",
-          width: "60px",
-          height: "60px",
-          color: "blue",
-          "background-fit": "contain",
-          "background-clip": "none"
+          "text-halign": "center",
+          "text-valign": "center",
+          width: "30px",
+          height: "30px",
+          color: "blue"
         }
       },
       {
         selector: "edge",
         style: {
           label: "data(weight)",
+          width: "2px",
           "text-background-color": "yellow",
-          "text-background-opacity": 0.4,
-          width: "6px",
-          "target-arrow-shape": "triangle",
-          "control-point-step-size": "140px"
+          "text-background-opacity": 0.4
         }
       }
     ],
     layout: {
       name: "cose"
-//      name: "circle"
     }
   });
 };
