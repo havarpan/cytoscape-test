@@ -2,38 +2,21 @@ import networkx as nx
 import random
 import json
 
-# cytoscape-compatible json from G
-# networkx's json_graph.cytoscape_data seems to be broken
+# cytoscape.js-compatible json from G
 def cyto_json(G):
+    my_json = nx.readwrite.json_graph.cytoscape_data(G)['elements']
+    for node in my_json['nodes']:
+        del node['data']['name'], node['data']['value']
+        node['data']['label'] = node['data']['id']
 
-    final = {}
-    final["nodes"] = []
-    final["edges"] = [] 
-
-    for node in G.nodes():
-        nd = {}
-        nd["data"] = {}
-        nd["data"]["id"] = node
-        nd["data"]["label"] = node
-        final["nodes"].append(nd)
-
-    for edge in G.edges():
-        nd = {}
-        nd["data"]={}
-        nd["data"]["id"]=str(edge[0])+str(edge[1])
-        nd["data"]["source"]=edge[0]
-        nd["data"]["target"]=edge[1]
-        nd["data"]["weight"]=G.edges[edge[0],edge[1]]['weight']
-        final["edges"].append(nd)
-
-    return json.dumps(final, indent=4)
+    return json.dumps(my_json)
 
 
 # connected graph with some randomness
 def create_graph():
-    G = nx.erdos_renyi_graph(random.randint(5,12), 0.4, directed=False)
+    G = nx.erdos_renyi_graph(random.randint(7,12), 0.4, directed=False)
     while not nx.is_connected(G):
-        G = nx.erdos_renyi_graph(random.randint(5,12), 0.4, directed=False)
+        G = nx.erdos_renyi_graph(random.randint(7,12), 0.4, directed=False)
 
     for (u, v) in G.edges():
         G.edges[u,v]['weight'] = random.randint(17,42)

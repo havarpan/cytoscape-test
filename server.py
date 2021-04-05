@@ -8,7 +8,7 @@ def newgraph():
     return jsonify(get_json())
   
 @app.route("/", methods = ['GET'])
-def template():
+def index():
     return render_template('index.html')
   
 if __name__ == "__main__":
